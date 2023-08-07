@@ -1,8 +1,15 @@
 <?php
+session_start();
+
 include('db.php');
 
 $sqlDevices = "SELECT id, name FROM devices";
 $devices = fetch($sqlDevices, $connection, true);
+
+if (!isset($_SESSION["user_id"])) {
+  header("Location: login.php");
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -52,8 +59,10 @@ $devices = fetch($sqlDevices, $connection, true);
                   <svg class="svg-icon svg-icon-xs svg-icon-heavy">
                     <use xlink:href="#find-1"> </use>
                   </svg></a></li>
+              <!-- User name -->
+              <li class="nav-item"><?php echo $_SESSION["user_name"]; ?></li>
               <!-- Logout    -->
-              <li class="nav-item"><a class="nav-link text-white" href="login.php"> <span class="d-none d-sm-inline">Logout</span>
+              <li class="nav-item"><a class="nav-link text-white" href="logout.php"> <span class="d-none d-sm-inline">Logout</span>
                   <svg class="svg-icon svg-icon-xs svg-icon-heavy">
                     <use xlink:href="#security-1"> </use>
                   </svg></a></li>
@@ -81,7 +90,13 @@ $devices = fetch($sqlDevices, $connection, true);
           <li class="sidebar-item"><a class="sidebar-link" href="login.php">
               <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
                 <use xlink:href="#disable-1"> </use>
-              </svg>Login page </a></li>
+              </svg>Login page </a>
+          </li>
+          <li class="sidebar-item"><a class="sidebar-link" href="register.php">
+              <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
+                <use xlink:href="#disable-1"> </use>
+              </svg>Register </a>
+          </li>
         </ul>
       </nav>
       <div class="content-inner w-100">
@@ -114,37 +129,40 @@ $devices = fetch($sqlDevices, $connection, true);
         </div>
         </section>
         <!-- Charts    -->
-        <div class="sensorChartHumidity">
-          <canvas width="200" height="70" id="sensorChart1"></canvas>
-          <button id="btnHumidity" style="display: none;" onclick="exportToCSV('sensorChart1')">Export Humidity sensor Data</button>
+        <div>
+          <div class="sensorChartHumidity">
+            <canvas width="200" height="70" id="sensorChart1"></canvas>
+            <button id="btnHumidity" style="display: none;" onclick="exportToCSV('sensorChart1')">Export Humidity sensor Data</button>
+          </div>
           <div class="sensorChartPh">
             <canvas width="200" height="70" id="sensorChart2"></canvas>
             <button id="btnPh" style="display: none;" onclick="exportToCSV('sensorChart2')">Export Ph sensor Data</button>
           </div>
-          <!-- Page Footer-->
-          <footer class="position-absolute bottom-0 bg-darkBlue text-white text-center py-3 w-100 text-xs" id="footer">
-            <div class="container-fluid">
-              <div class="row gy-2">
-                <div class="col-sm-6 text-sm-start">
-                  <p class="mb-0">Your company &copy; 2017-2022</p>
-                </div>
-                <div class="col-sm-6 text-sm-end">
-                  <p class="mb-0">Design by <a href="#" class="text-white text-decoration-none">Marija</a></p>
-                  <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
-                </div>
+        </div>
+        <!-- Page Footer-->
+        <footer class="position-absolute bottom-0 bg-darkBlue text-white text-center py-3 w-100 text-xs" id="footer">
+          <div class="container-fluid">
+            <div class="row gy-2">
+              <div class="col-sm-6 text-sm-start">
+                <p class="mb-0">Your company &copy; 2017-2022</p>
+              </div>
+              <div class="col-sm-6 text-sm-end">
+                <p class="mb-0">Design by <a href="#" class="text-white text-decoration-none">Marija</a></p>
+                <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
               </div>
             </div>
-          </footer>
-        </div>
+          </div>
+        </footer>
       </div>
     </div>
-    <!-- JavaScript files-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+  </div>
+  <!-- JavaScript files-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="/js/get-sensor.js"></script>
-    <script src="/js/exportToCSV.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="/js/get-sensor.js"></script>
+  <script src="/js/exportToCSV.js"></script>
 </body>
 
 </html>

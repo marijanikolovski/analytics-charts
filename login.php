@@ -76,7 +76,7 @@ if (isset($_POST['submit'])) {
                     <input class="input-material" type="password" name="password" required>
                     <label class="label-material" for="password">Password</label>
                   </div>
-                  <button class="btn btn-primary mb-3" name="submit" type="submit">Login</button>
+                  <button class="btn btn-primary mb-3" name="submit" type="submit">Login</button><br><small class="text-gray-500">Do not have an account? </small><a class="text-sm text-paleBlue" href="register.php">Signup</a>
                 </form>
               </div>
             </div>

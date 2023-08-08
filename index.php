@@ -7,7 +7,7 @@ $sqlDevices = "SELECT id, name FROM devices";
 $devices = fetch($sqlDevices, $connection, true);
 
 if (!isset($_SESSION["user_id"])) {
-  header("Location: login.php");
+  header("Location: register.php");
   exit();
 }
 ?>
@@ -60,9 +60,9 @@ if (!isset($_SESSION["user_id"])) {
                     <use xlink:href="#find-1"> </use>
                   </svg></a></li>
               <!-- User name -->
-              <li class="nav-item"><?php echo $_SESSION["user_name"]; ?></li>
+              <li class="nav-item"><span class="userDisplay"><?php echo $_SESSION["user_name"]; ?></span></li>
               <!-- Logout    -->
-              <li class="nav-item"><a class="nav-link text-white" href="logout.php"> <span class="d-none d-sm-inline">Logout</span>
+              <li class="nav-item"><a class="nav-link text-white" href="logout.php"> <span>Logout</span>
                   <svg class="svg-icon svg-icon-xs svg-icon-heavy">
                     <use xlink:href="#security-1"> </use>
                   </svg></a></li>
@@ -87,16 +87,6 @@ if (!isset($_SESSION["user_id"])) {
               <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
                 <use xlink:href="#real-estate-1"> </use>
               </svg>Home </a></li>
-          <li class="sidebar-item"><a class="sidebar-link" href="login.php">
-              <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-                <use xlink:href="#disable-1"> </use>
-              </svg>Login page </a>
-          </li>
-          <li class="sidebar-item"><a class="sidebar-link" href="register.php">
-              <svg class="svg-icon svg-icon-sm svg-icon-heavy me-xl-2">
-                <use xlink:href="#disable-1"> </use>
-              </svg>Register </a>
-          </li>
         </ul>
       </nav>
       <div class="content-inner w-100">
@@ -107,62 +97,69 @@ if (!isset($_SESSION["user_id"])) {
           </div>
         </header>
         <!-- Dashboard Counts Section-->
+        <div class="device">
+          <h1 class="h1">Sensor value for each device</h1>
+          <div class="formDevice">
+            <p class="labelDevice" for="device">Select a device:</p>
+            <form class="deviceForm" id="deviceForm" method="post">
+              <select class="selectDevice" name="device" id="device">
+                <?php
+                foreach ($devices as $device) {
+                  echo "<option  value=\"" . $device["id"] . "\">" . $device["name"] . "</option>";
+                }
+                ?>
+              </select>
+              <input class="btnDevice" type="submit" value="Show Latest Sensor Data">
+            </form>
+          </div>
+        </div>
         <div class="container-fluid">
           <div class="card mb-0">
             <div class="card-body">
-              <div class="row gx-5 bg-white">
-                <h1>Select a Device</h1>
-                <form id="deviceForm" method="post">
-                  <label for="device">Select a device:</label>
-                  <select name="device" id="device">
-                    <?php
-                    foreach ($devices as $device) {
-                      echo "<option  value=\"" . $device["id"] . "\">" . $device["name"] . "</option>";
-                    }
-                    ?>
-                    <input type="submit" value="Show Latest Sensor Data">
-                </form>
-                <div id="latestData"></div>
+              <!-- Item -->
+              <div class=" py-4 border-lg-end border-gray-200">
+                <div class="d-flex align-items-center">
+                  <div class="mx-3" id="latestData"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        </section>
-        <!-- Charts    -->
-        <div>
-          <div class="sensorChartHumidity">
-            <canvas width="200" height="70" id="sensorChart1"></canvas>
-            <button id="btnHumidity" style="display: none;" onclick="exportToCSV('sensorChart1')">Export Humidity sensor Data</button>
-          </div>
-          <div class="sensorChartPh">
-            <canvas width="200" height="70" id="sensorChart2"></canvas>
-            <button id="btnPh" style="display: none;" onclick="exportToCSV('sensorChart2')">Export Ph sensor Data</button>
-          </div>
-        </div>
-        <!-- Page Footer-->
-        <footer class="position-absolute bottom-0 bg-darkBlue text-white text-center py-3 w-100 text-xs" id="footer">
-          <div class="container-fluid">
-            <div class="row gy-2">
-              <div class="col-sm-6 text-sm-start">
-                <p class="mb-0">Your company &copy; 2017-2022</p>
-              </div>
-              <div class="col-sm-6 text-sm-end">
-                <p class="mb-0">Design by <a href="#" class="text-white text-decoration-none">Marija</a></p>
-                <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
-              </div>
+          </section>
+          <!-- Charts    -->
+          <div>
+            <div class="sensorChartHumidity">
+              <canvas width="200" height="70" id="sensorChart1"></canvas>
+              <button class="btnCSV" id="btnHumidity" style="display: none;" onclick="exportToCSV('sensorChart1')">Export Humidity Sensor Data</button>
+            </div>
+            <div class="sensorChartPh">
+              <canvas width="200" height="70" id="sensorChart2"></canvas>
+              <button class="btnCSV" id="btnPh" style="display: none;" onclick="exportToCSV('sensorChart2')">Export Ph Sensor Data</button>
             </div>
           </div>
-        </footer>
+          <!-- Page Footer-->
+          <footer class="position-absolute bottom-0 bg-darkBlue text-white text-center py-3 w-100 text-xs" id="footer">
+            <div class="container-fluid">
+              <div class="row gy-2">
+                <div class="col-sm-6 text-sm-start">
+                  <p class="mb-0">Your company &copy; 2017-2022</p>
+                </div>
+                <div class="col-sm-6 text-sm-end">
+                  <p class="mb-0">Design by <a href="#" class="text-white text-decoration-none">Marija</a></p>
+                  <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- JavaScript files-->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
+    <!-- JavaScript files-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-  <script src="/js/get-sensor.js"></script>
-  <script src="/js/exportToCSV.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="/js/get-sensor.js"></script>
+    <script src="/js/exportToCSV.js"></script>
 </body>
 
 </html>
